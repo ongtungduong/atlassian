@@ -1,0 +1,51 @@
+services:
+  confluence:
+    build: .
+    environment:
+      - TZ=Asia/Bangkok
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data/confluence:/var/confluence
+      - ./confluence/server.xml:/opt/confluence/conf/server.xml
+      - ./confluence/setenv.sh:/opt/confluence/bin/setenv.sh
+      - ./confluence/atlassian-agent.jar:/var/agent/atlassian-agent.jar
+    restart: always
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  jira:
+    build: .
+    environment:
+      - TZ=Asia/Bangkok
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data/jira:/var/jira
+      - ./jira/server.xml:/opt/jira/conf/server.xml
+      - ./jira/setenv.sh:/opt/jira/bin/setenv.sh
+      - ./jira/atlassian-agent.jar:/var/agent/atlassian-agent.jar
+    restart: always
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "1"
+
+  postgresql:
+    image: bitnami/postgresql:16.4.0
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRESQL_SHARED_PRELOAD_LIBRARIES=pg_stat_statements
+      - POSTGRESQL_PASSWORD=examplepassword
+    volumes:
+      - './data/postgresql:/bitnami/postgresql/data'
+    shm_size: 1g
+    logging:
+      options:
+        max-size: "1m"
+        max-file: "1"
+
