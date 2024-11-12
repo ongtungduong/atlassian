@@ -13,15 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Check out
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
     
-      - uses: mr-smithers-excellent/docker-build-push@v6
-        name: Build Confluence Docker image
+      - name: Build Confluence Docker image
+        uses: docker/build-push-action@v5
         with:
-          image: ${{ github.repository }}/confluence
+          context: ./confluence
+          push: true
+          tags: ${{ github.repository }}/confluence:${{ github.ref_name }}-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           registry: docker.io
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: confluence/Dockerfile
 
   jira:
     runs-on: ubuntu-latest
@@ -29,11 +35,17 @@ jobs:
       - uses: actions/checkout@v3
         name: Check out
 
-      - uses: mr-smithers-excellent/docker-build-push@v6
-        name: Build Jira Docker image
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Jira Docker image
+        uses: docker/build-push-action@v5
         with:
-          image: ${{ github.repository }}/jira
+          context: ./jira
+          push: true
+          tags: ${{ github.repository }}/jira:${{ github.ref_name }}-${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           registry: docker.io
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD }}
-          dockerfile: jira/Dockerfile
