@@ -28,7 +28,7 @@ jobs:
         with:
           context: ./confluence
           push: true
-          tags: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('{0}/confluence:main-{1}', github.actor, github.sha::6) }}
+          tags: ${{ github.actor }}/confluence:${{ github.sha:0:5 }}
           cache-from: type=registry,ref=${{ github.actor }}/confluence:buildcache
           cache-to: type=registry,ref=${{ github.actor }}/confluence:buildcache,mode=max
 
@@ -52,7 +52,7 @@ jobs:
         with:
           context: ./jira
           push: true
-          tags: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('{0}/jira:main-{1}', github.actor, github.sha::6) }}
+          tags: ${{ github.actor }}/jira:${{ github.sha:0:5 }}
           cache-from: type=registry,ref=${{ github.actor }}/jira:buildcache
           cache-to: type=registry,ref=${{ github.actor }}/jira:buildcache,mode=max
 
