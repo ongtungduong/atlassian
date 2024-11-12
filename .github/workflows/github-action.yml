@@ -28,9 +28,9 @@ jobs:
         with:
           context: ./confluence
           push: true
-          tags: ${{ github.actor }}/confluence:${{ github.ref_name }}-${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('{0}/confluence:main-{1}', github.actor, github.sha::6) }}
+          cache-from: type=registry,ref=${{ github.actor }}/confluence:buildcache
+          cache-to: type=registry,ref=${{ github.actor }}/confluence:buildcache,mode=max
 
   jira:
     runs-on: ubuntu-latest
@@ -52,7 +52,7 @@ jobs:
         with:
           context: ./jira
           push: true
-          tags: ${{ github.actor }}/jira:${{ github.ref_name }}-${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          tags: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('{0}/jira:main-{1}', github.actor, github.sha::6) }}
+          cache-from: type=registry,ref=${{ github.actor }}/jira:buildcache
+          cache-to: type=registry,ref=${{ github.actor }}/jira:buildcache,mode=max
 
