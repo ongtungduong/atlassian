@@ -28,7 +28,7 @@ jobs:
         with:
           context: ./confluence
           push: true
-          tags: ${{ github.actor }}/confluence:${{ github.sha:0:5 }}
+          tags: ${{ github.actor }}/confluence:${{ github.sha | slice:0:5 }}
           cache-from: type=registry,ref=${{ github.actor }}/confluence:buildcache
           cache-to: type=registry,ref=${{ github.actor }}/confluence:buildcache,mode=max
 
