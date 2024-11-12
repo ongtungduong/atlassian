@@ -13,10 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Check out
-      
-      - name: Generate short SHA
-        id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -27,12 +23,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: CI/CD Variables
+        id: vars
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            echo "image_tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "image_tag=main-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build Confluence Docker image
         uses: docker/build-push-action@v5
         with:
           context: ./confluence
           push: true
-          tags: ${{ github.actor }}/confluence:${{ steps.vars.outputs.sha_short }}
+          tags: ${{ github.actor }}/confluence:${{ steps.vars.outputs.image_tag }}
           cache-from: type=registry,ref=${{ github.actor }}/confluence:buildcache
           cache-to: type=registry,ref=${{ github.actor }}/confluence:buildcache,mode=max
 
@@ -42,9 +47,14 @@ jobs:
       - uses: actions/checkout@v3
         name: Check out
 
-      - name: Generate short SHA
+      - name: CI/CD Variables
         id: vars
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+        run: |
+          if [[ $GITHUB_REF == refs/tags/v* ]]; then
+            echo "image_tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "image_tag=main-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -60,7 +70,7 @@ jobs:
         with:
           context: ./jira
           push: true
-          tags: ${{ github.actor }}/jira:${{ steps.vars.outputs.sha_short }}
+          tags: ${{ github.actor }}/jira:${{ steps.vars.outputs.image_tag }}
           cache-from: type=registry,ref=${{ github.actor }}/jira:buildcache
           cache-to: type=registry,ref=${{ github.actor }}/jira:buildcache,mode=max
 
