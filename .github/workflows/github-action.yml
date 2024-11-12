@@ -28,7 +28,7 @@ jobs:
         with:
           context: ./confluence
           push: true
-          tags: ${{ github.repository }}/confluence:${{ github.ref_name }}-${{ github.sha }}
+          tags: confluence:${{ github.ref_name }}-${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -52,7 +52,7 @@ jobs:
         with:
           context: ./jira
           push: true
-          tags: ${{ github.repository }}/jira:${{ github.ref_name }}-${{ github.sha }}
+          tags: jira:${{ github.ref_name }}-${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
