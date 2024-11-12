@@ -8,7 +8,7 @@ on:
       - 'v*'
 
 jobs:
-  docker:
+  confluence:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -22,6 +22,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD }}
           dockerfile: confluence/Dockerfile
+
+  jira:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        name: Check out
 
       - uses: mr-smithers-excellent/docker-build-push@v6
         name: Build Jira Docker image
