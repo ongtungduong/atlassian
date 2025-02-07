@@ -1,11 +1,18 @@
 # Getting started
 
-- Simply run the `setup.sh` script to download the Atlassian Agent jar file and set the proper permissions for the files and directories.
+## Change permissions for Atlassian files and data directories
 
-- For more information, please refer to README.md in each Atlassian product directory and docker-compose.yaml file.
+```bash
+find ./ -type f -exec chown 999:999 {} +
+mkdir -p data/{jira,confluence} && chown -R 999:999 data/{jira,confluence}
+```
 
-## Persisting your data
+## Get Atlassian Agent
 
-- The mounted Atlassian files and directories must have the proper permissions for the UID *999* and GID *999*.
+For more information, please refer to README.md in each Atlassian product directory.
 
-**Please setup PostgreSQL database before running the setup.sh script.**
+## Proxy name
+
+Change the `proxyName` in the `server.xml` file in each Atlassian product directory to your domain name.
+
+**Please setup PostgreSQL database manually.**
