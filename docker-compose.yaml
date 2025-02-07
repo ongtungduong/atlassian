@@ -1,8 +1,20 @@
+x-common: &common
+  restart: always
+  logging:
+    options:
+      max-size: "1m"
+      max-file: "1"
+
+x-atlassian-env: &atlassian-env
+  environment:
+  - TZ=Asia/Bangkok
+  - JVM_MINIMUM_MEMORY=2g
+  - JVM_MAXIMUM_MEMORY=4g
+
 services:
   confluence:
+    <<: [*common, *atlassian-env]
     build: .
-    environment:
-      - TZ=Asia/Bangkok
     ports:
       - "8090:8090"
     volumes:
@@ -10,16 +22,10 @@ services:
       - ./confluence/server.xml:/opt/confluence/conf/server.xml
       - ./confluence/setenv.sh:/opt/confluence/bin/setenv.sh
       - ./confluence/atlassian-agent.jar:/var/agent/atlassian-agent.jar
-    restart: always
-    logging:
-      options:
-        max-size: "1m"
-        max-file: "1"
 
   jira:
+    <<: [*common, *atlassian-env]
     build: .
-    environment:
-      - TZ=Asia/Bangkok
     ports:
       - "8080:8080"
     volumes:
@@ -27,25 +33,17 @@ services:
       - ./jira/server.xml:/opt/jira/conf/server.xml
       - ./jira/setenv.sh:/opt/jira/bin/setenv.sh
       - ./jira/atlassian-agent.jar:/var/agent/atlassian-agent.jar
-    restart: always
-    logging:
-      options:
-        max-size: "1m"
-        max-file: "1"
 
   postgresql:
+    <<: *common
     image: bitnami/postgresql:16.4.0
-    restart: always
     ports:
       - "5432:5432"
+    shm_size: 1g
     environment:
       - POSTGRESQL_SHARED_PRELOAD_LIBRARIES=pg_stat_statements
       - POSTGRESQL_PASSWORD=examplepassword
     volumes:
       - './data/postgresql:/bitnami/postgresql/data'
-    shm_size: 1g
-    logging:
-      options:
-        max-size: "1m"
-        max-file: "1"
+    
 
