@@ -56,7 +56,9 @@ $JRE_HOME/bin/java -jar $CATALINA_HOME/bin/synchrony-proxy-watchdog.jar $CATALIN
 echo "---------------------------------------------------------------------------"
 
 # Set the Java heap size
-CATALINA_OPTS="-Xms2048m -Xmx4096m ${CATALINA_OPTS}"
+JVM_MINIMUM_MEMORY=${JVM_MINIMUM_MEMORY:-2g}
+JVM_MAXIMUM_MEMORY=${JVM_MAXIMUM_MEMORY:-4g}
+CATALINA_OPTS="-Xms${JVM_MINIMUM_MEMORY} -Xmx${JVM_MAXIMUM_MEMORY} ${CATALINA_OPTS}"
 
 # Default values for small to medium size instances
 CATALINA_OPTS="-XX:ReservedCodeCacheSize=256m ${CATALINA_OPTS}"
