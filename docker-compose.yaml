@@ -21,7 +21,7 @@ services:
       - ./data/confluence:/var/confluence
       - ./confluence/server.xml:/opt/confluence/conf/server.xml
       - ./confluence/setenv.sh:/opt/confluence/bin/setenv.sh
-      - ./confluence/atlassian-agent.jar:/var/agent/atlassian-agent.jar
+      - ./atlassian-agent.jar:/var/agent/atlassian-agent.jar
 
   jira:
     <<: [*common, *atlassian-env]
@@ -32,18 +32,4 @@ services:
       - ./data/jira:/var/jira
       - ./jira/server.xml:/opt/jira/conf/server.xml
       - ./jira/setenv.sh:/opt/jira/bin/setenv.sh
-      - ./jira/atlassian-agent.jar:/var/agent/atlassian-agent.jar
-
-  postgresql:
-    <<: *common
-    image: bitnami/postgresql:16.4.0
-    ports:
-      - "5432:5432"
-    shm_size: 1g
-    environment:
-      - POSTGRESQL_SHARED_PRELOAD_LIBRARIES=pg_stat_statements
-      - POSTGRESQL_PASSWORD=examplepassword
-    volumes:
-      - './data/postgresql:/bitnami/postgresql/data'
-    
-
+      - ./atlassian-agent.jar:/var/agent/atlassian-agent.jar
