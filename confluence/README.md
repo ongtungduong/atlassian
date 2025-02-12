@@ -1,12 +1,5 @@
 # Confluence
 
-## How to get the agent
-
-Run the following command to get the agent.
-```
-wget https://github.com/haxqer/confluence/releases/download/v1.3.3/atlassian-agent.jar
-```
-
 ## How to get license
 *Exec to the container and run the following command.*
 

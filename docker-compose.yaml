@@ -4,8 +4,6 @@ x-common: &common
     options:
       max-size: "1m"
       max-file: "1"
-
-x-atlassian-env: &atlassian-env
   environment:
   - TZ=Asia/Bangkok
   - JVM_MINIMUM_MEMORY=2g
@@ -13,7 +11,7 @@ x-atlassian-env: &atlassian-env
 
 services:
   confluence:
-    <<: [*common, *atlassian-env]
+    <<: [*common]
     build: .
     ports:
       - "8090:8090"
@@ -24,7 +22,7 @@ services:
       # - ./atlassian-agent.jar:/var/agent/atlassian-agent.jar
 
   jira:
-    <<: [*common, *atlassian-env]
+    <<: [*common]
     build: .
     ports:
       - "8080:8080"
