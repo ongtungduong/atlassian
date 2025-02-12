@@ -2,8 +2,6 @@ name: build-docker
 
 on:
   push:
-    branches:
-      - 'main'
     tags:
       - 'v*'
 
@@ -26,20 +24,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: CI/CD Variables
-        id: vars
-        run: |
-          if [[ $GITHUB_REF == refs/tags/v* ]]; then
-            echo "image_tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
-          else
-            echo "image_tag=main-$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          fi
-
       - name: Build ${{ matrix.service }} Docker image
         uses: docker/build-push-action@v6
         with:
           context: ./${{ matrix.service }}
           push: true
-          tags: ${{ github.actor }}/${{ matrix.service }}:${{ steps.vars.outputs.image_tag }}
+          tags: ${{ github.actor }}/${{ matrix.service }}:${{ github.ref_name }}
           cache-from: type=registry,ref=${{ github.actor }}/${{ matrix.service }}:buildcache
           cache-to: type=registry,ref=${{ github.actor }}/${{ matrix.service }}:buildcache,mode=max
